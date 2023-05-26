@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/api/service"
 	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/config"
-	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/pb/authpb"
+	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/pb"
 	"google.golang.org/grpc"
 )
 
@@ -15,23 +14,23 @@ type Server struct {
 	lis    net.Listener
 }
 
-func SetupAuthServer(server *service.ServiceServer, cfg *config.Config) (*Server, error) {
+func SetupAuthServer(server pb.AuthServiceServer, cfg *config.Config) (*Server, error) {
 
 	grpcServer := grpc.NewServer()
 
 	lis, err := net.Listen("tcp", cfg.ServicePort)
 	if err != nil {
-		return nil, fmt.Errorf("faild to start tcp connection error:%s", err.Error())
+		return nil, fmt.Errorf("failed to create net listener error:%s", err.Error())
 	}
-	authpb.RegisterAuthServiceServer(grpcServer, server)
+	pb.RegisterAuthServiceServer(grpcServer, server)
+
 	return &Server{
 		server: grpcServer,
 		lis:    lis,
 	}, nil
 }
 
-func (c *Server) Start() (err error) {
+func (c *Server) Start() error {
 	fmt.Println("auth service listening...")
-	err = c.server.Serve(c.lis)
-	return
+	return c.server.Serve(c.lis)
 }

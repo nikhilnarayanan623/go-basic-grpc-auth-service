@@ -11,13 +11,11 @@ func main() {
 
 	cfg, err := config.LoadEnvs()
 	if err != nil {
-		log.Fatalf("faild to load envs error:%s", err.Error())
+		log.Fatalf("failed to load envs error:%s", err.Error())
 	}
-
-	server, err := di.InitiliazeService(cfg)
+	server, err := di.InitializeService(cfg)
 	if err != nil {
-		log.Fatalf("faild to initialize service error:%s", err.Error())
+		log.Fatalf("failed to initialize service error:%s", err.Error())
 	}
-
 	server.Start()
 }

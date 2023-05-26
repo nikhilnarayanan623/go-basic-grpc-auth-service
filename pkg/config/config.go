@@ -3,7 +3,7 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	ServicePort string `mapstructure:"PORT"`
+	ServicePort string `mapstructure:"SERVICE_PORT"`
 	DBHost      string `mapstructure:"DB_HOST"`
 	DBPort      string `mapstructure:"DB_PORT"`
 	DBName      string `mapstructure:"DB_NAME"`
@@ -13,7 +13,7 @@ type Config struct {
 }
 
 var envs = []string{
-	"PORT",
+	"SERVICE_PORT",
 	"DB_HOST", "DB_PORT", "DB_NAME", "DB_USER", "DB_PASSWORD",
 	"JWT_SECRET",
 }

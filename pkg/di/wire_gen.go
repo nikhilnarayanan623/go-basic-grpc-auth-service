@@ -18,7 +18,7 @@ import (
 
 // Injectors from wire.go:
 
-func InitiliazeService(cfg *config.Config) (*api.Server, error) {
+func InitializeService(cfg *config.Config) (*api.Server, error) {
 	gormDB, err := db.InitializeDatabase(cfg)
 	if err != nil {
 		return nil, err
@@ -26,8 +26,8 @@ func InitiliazeService(cfg *config.Config) (*api.Server, error) {
 	authRepository := repository.NewAuthRepository(gormDB)
 	tokenAuth := token.NewJwtTokenAuth(cfg)
 	authUseCase := usecase.NewAuthUseCase(authRepository, tokenAuth)
-	serviceServer := service.NewAuthServiceServer(authUseCase)
-	server, err := api.SetupAuthServer(serviceServer, cfg)
+	authServiceServer := service.NewAuthServiceServer(authUseCase)
+	server, err := api.SetupAuthServer(authServiceServer, cfg)
 	if err != nil {
 		return nil, err
 	}
