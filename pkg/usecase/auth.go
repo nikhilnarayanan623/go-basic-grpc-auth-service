@@ -9,6 +9,7 @@ import (
 	repo "github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/repository/interfaces"
 	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/token"
 	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/usecase/interfaces"
+	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/utils"
 )
 
 type authUseCase struct {
@@ -29,6 +30,11 @@ func (c *authUseCase) UserSignup(ctx context.Context, user domain.User) (userId 
 		return
 	} else if user.ID != 0 {
 		return userId, fmt.Errorf("user already exist with given email")
+	}
+
+	user.Password, err = utils.GenerateHashFromPassword(user.Password)
+	if err != nil {
+		return userId, fmt.Errorf("faild to hash the passwrod \nerror:%s", err.Error())
 	}
 
 	userId, err = c.authRepo.SaveUser(ctx, user)
