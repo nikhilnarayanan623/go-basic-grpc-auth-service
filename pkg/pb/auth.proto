@@ -1,7 +1,8 @@
 syntax = "proto3";
-
 package pb;
-option go_package = "./pkg/pb/authpb";
+
+option go_package = "./pkg/pb";
+import "pkg/pb/resonse.proto";
 
 service AuthService {
     rpc UserSignup(SignupRequest) returns (SignupResponse){}
@@ -9,11 +10,6 @@ service AuthService {
     rpc ValidateAccessToken(ValidateRequest) returns (ValidateResponse){}
 }
 
-message Response{
-    uint32 status_code = 1;
-    string message = 2;
-    string error  = 3;
-}
 
 message SignupRequest{
     string first_name = 1;
