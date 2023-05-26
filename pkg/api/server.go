@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/api/service"
+	service "github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/api/service/interfaces"
 	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/config"
 	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/pb/authpb"
 	"google.golang.org/grpc"
@@ -15,7 +15,7 @@ type Server struct {
 	lis    net.Listener
 }
 
-func SetupAuthServer(server *service.ServiceServer, cfg *config.Config) (*Server, error) {
+func SetupAuthServer(server service.ServiceServer, cfg *config.Config) (*Server, error) {
 
 	grpcServer := grpc.NewServer()
 

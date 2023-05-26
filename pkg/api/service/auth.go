@@ -4,23 +4,24 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/api/service/interfaces"
 	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/domain"
 	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/pb/authpb"
-	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/usecase/interfaces"
+	usecase "github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/usecase/interfaces"
 )
 
-type ServiceServer struct {
+type serviceServer struct {
 	authpb.AuthServiceServer
-	authUseCase interfaces.AuthUseCase
+	authUseCase usecase.AuthUseCase
 }
 
-func NewAuthServiceServer(useCase interfaces.AuthUseCase) *ServiceServer {
-	return &ServiceServer{
+func NewAuthServiceServer(useCase usecase.AuthUseCase) interfaces.ServiceServer {
+	return &serviceServer{
 		authUseCase: useCase,
 	}
 }
 
-func (c *ServiceServer) UserSignup(ctx context.Context, req *authpb.SignupRequest) (res *authpb.SignupResponse, err error) {
+func (c *serviceServer) UserSignup(ctx context.Context, req *authpb.SignupRequest) (res *authpb.SignupResponse, err error) {
 
 	_, err = c.authUseCase.UserSignup(context.Background(), domain.User{
 		FirstName: req.FirstName,
@@ -49,9 +50,9 @@ func (c *ServiceServer) UserSignup(ctx context.Context, req *authpb.SignupReques
 	}, nil
 }
 
-func (c *ServiceServer) UserLogin(ctx context.Context, req *authpb.LoginRequest) (res *authpb.LoginResponse, err error) {
+func (c *serviceServer) UserLogin(ctx context.Context, req *authpb.LoginRequest) (res *authpb.LoginResponse, err error) {
 	return
 }
-func (c *ServiceServer) ValidateAccessToken(ctx context.Context, req *authpb.ValidateRequest) (res *authpb.ValidateResponse, err error) {
+func (c *serviceServer) ValidateAccessToken(ctx context.Context, req *authpb.ValidateRequest) (res *authpb.ValidateResponse, err error) {
 	return
 }
