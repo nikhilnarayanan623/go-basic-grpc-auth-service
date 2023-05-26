@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package pb;
-option go_package = "./pkg/pb";
+option go_package = "./pkg/pb/authpb";
 
 service AuthService {
     rpc UserSignup(SignupRequest) returns (SignupResponse){}
