@@ -2,7 +2,7 @@ syntax = "proto3";
 package pb;
 
 option go_package = "./pkg/pb";
-import "pkg/pb/resonse.proto";
+import "pkg/pb/response.proto";
 
 service AuthService {
     rpc UserSignup(SignupRequest) returns (SignupResponse){}
