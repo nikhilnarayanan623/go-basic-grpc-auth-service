@@ -44,9 +44,8 @@ func (c *jwtAuth) VerifyToken(tokenString string) (TokenResponse, error) {
 	})
 
 	if err != nil {
-		return TokenResponse{}, fmt.Errorf("faild to parse token string to token")
+		return TokenResponse{}, fmt.Errorf("faild to parse token string to token \nerror:%s", err.Error())
 	}
-
 	claims, ok := token.Claims.(*JwtClaims)
 	if !ok {
 		return TokenResponse{}, fmt.Errorf("faild to parse the token")

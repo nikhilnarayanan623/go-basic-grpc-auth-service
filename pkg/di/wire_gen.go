@@ -9,6 +9,7 @@ package di
 import (
 	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/api"
 	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/api/service"
+	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/clients"
 	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/config"
 	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/db"
 	"github.com/nikhilnarayanan623/go-basic-grpc-auth-service/pkg/repository"
@@ -25,7 +26,11 @@ func InitializeService(cfg *config.Config) (*api.Server, error) {
 	}
 	authRepository := repository.NewAuthRepository(gormDB)
 	tokenAuth := token.NewJwtTokenAuth(cfg)
-	authUseCase := usecase.NewAuthUseCase(authRepository, tokenAuth)
+	userClient, err := clients.NewUserClient(cfg)
+	if err != nil {
+		return nil, err
+	}
+	authUseCase := usecase.NewAuthUseCase(authRepository, tokenAuth, userClient)
 	authServiceServer := service.NewAuthServiceServer(authUseCase)
 	server, err := api.SetupAuthServer(authServiceServer, cfg)
 	if err != nil {

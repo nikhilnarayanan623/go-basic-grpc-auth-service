@@ -50,8 +50,59 @@ func (c *serviceServer) UserSignup(ctx context.Context, req *pb.SignupRequest) (
 }
 
 func (c *serviceServer) UserLogin(ctx context.Context, req *pb.LoginRequest) (res *pb.LoginResponse, err error) {
-	return
+
+	userID, err := c.authUseCase.UserLogin(ctx, domain.LoginRequest{
+		Email:    req.Email,
+		Password: req.Password,
+	})
+	if err != nil {
+		return &pb.LoginResponse{
+			Response: &pb.Response{
+				StatusCode: http.StatusBadRequest,
+				Message:    "failed to login",
+				Error:      err.Error(),
+			},
+		}, nil
+	}
+
+	accessToken, err := c.authUseCase.GenerateAccessToken(ctx, userID)
+	if err != nil {
+		return &pb.LoginResponse{
+			Response: &pb.Response{
+				StatusCode: http.StatusInternalServerError,
+				Message:    "failed to generate access token",
+				Error:      err.Error(),
+			},
+		}, nil
+	}
+
+	return &pb.LoginResponse{
+		Response: &pb.Response{
+			StatusCode: http.StatusOK,
+			Message:    "successfully user validated and access token generated",
+			Error:      "",
+		},
+		AccessToken: accessToken,
+	}, nil
 }
-func (c *serviceServer) ValidateAccessToken(ctx context.Context, req *pb.ValidateRequest) (res *pb.ValidateResponse, err error) {
-	return
+func (c *serviceServer) ValidateAccessToken(ctx context.Context, req *pb.ValidateRequest) (*pb.ValidateResponse, error) {
+
+	userID, err := c.authUseCase.VerifyAccessToken(context.Background(), req.AccessToken)
+	if err != nil {
+		return &pb.ValidateResponse{
+			Response: &pb.Response{
+				StatusCode: http.StatusUnauthorized,
+				Message:    "failed to verify token",
+				Error:      err.Error(),
+			},
+		}, nil
+	}
+	return &pb.ValidateResponse{
+		Response: &pb.Response{
+			StatusCode: http.StatusOK,
+			Message:    "successfully token verified",
+			Error:      "",
+		},
+		UserId: userID,
+	}, nil
 }
